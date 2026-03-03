@@ -5,13 +5,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Models\Product;
+use App\Http\Controllers\PublicController;
 
 Route::get('/', function () {
    $products = Product::with('user')->latest()->take(6)->get();
 
-    // Mengirim variabel $products ke view welcome
-    return view('welcome', compact('products'));
-});
+    // Mengirim variabel $products ke view home
+    return view('home', compact('products'));
+})->name('home');
+Route::get('/about', [PublicController::class, 'about'])->name('about');
+Route::get('/products', [PublicController::class, 'allProducts'])->name('products.all');
+Route::get('/product/{id}', [PublicController::class, 'show'])->name('product.detail');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
