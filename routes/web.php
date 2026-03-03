@@ -4,9 +4,13 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Models\Product;
 
 Route::get('/', function () {
-    return view('welcome');
+   $products = Product::with('user')->latest()->take(6)->get();
+
+    // Mengirim variabel $products ke view welcome
+    return view('welcome', compact('products'));
 });
 
 Route::get('/dashboard', function () {
