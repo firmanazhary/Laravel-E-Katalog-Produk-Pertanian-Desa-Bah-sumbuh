@@ -15,7 +15,7 @@ Route::get('/', function () {
 })->name('home');
 Route::get('/about', [PublicController::class, 'about'])->name('about');
 Route::get('/products', [PublicController::class, 'allProducts'])->name('products.all');
-Route::get('/product/{id}', [PublicController::class, 'show'])->name('product.detail');
+Route::get('/product/{slug}', [PublicController::class, 'show'])->name('product.detail');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

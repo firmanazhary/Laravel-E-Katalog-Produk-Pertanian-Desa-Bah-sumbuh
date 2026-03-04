@@ -87,7 +87,7 @@
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Harga Pas</p>
                                 <span class="text-2xl font-black text-green-700">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
                             </div>
-                            <a href="/product/{{ $product->id }}" class="bg-green-900 hover:bg-orange-500 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition flex items-center gap-2 group">
+                            <a href="/product/{{ $product->slug }}" class="bg-green-900 hover:bg-orange-500 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition flex items-center gap-2 group">
                                 Amankan Stok
                                 <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>

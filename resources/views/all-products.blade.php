@@ -90,7 +90,7 @@
                                 <h3 class="text-xl font-black text-green-900 mb-4">{{ $product->name }}</h3>
                                 <div class="flex items-center justify-between border-t border-slate-50 pt-4">
                                     <span class="text-lg font-black text-green-700">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                                    <a href="{{ route('product.detail', $product->id) }}" class="w-10 h-10 bg-green-900 rounded-xl flex items-center justify-center text-white hover:bg-orange-500 transition shadow-lg shadow-green-100">
+                                    <a href="{{ route('product.detail', $product->slug) }}" class="w-10 h-10 bg-green-900 rounded-xl flex items-center justify-center text-white hover:bg-orange-500 transition shadow-lg shadow-green-100">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                     </a>
                                 </div>

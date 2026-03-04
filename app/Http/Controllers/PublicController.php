@@ -64,14 +64,14 @@ class PublicController extends Controller
     /**
      * Menampilkan Detail Produk & Rekomendasi Produk Petani Terkait
      */
-    public function show($id)
+    public function show($slug)
     {
         // Cari produk utama
-        $product = Product::with('user')->findOrFail($id);
-        
+        $product = Product::with('user')->where('slug', $slug)->firstOrFail();
+
         // Ambil produk lain dari petani yang sama sebagai rekomendasi (Related Products)
         $relatedProducts = Product::where('user_id', $product->user_id)
-                                    ->where('id', '!=', $id)
+                                    ->where('id', '!=', $product->id)
                                     ->take(3)
                                     ->get();
 
