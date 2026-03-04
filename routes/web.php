@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
-
+use App\Models\Product;
+use App\Models\User;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,9 +29,22 @@ Route::get('/product/{slug}', [PublicController::class, 'show'])->name('product.
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     
     // Halaman Utama Dashboard
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashboard');
+  Route::get('/', function () {
+    $user = auth()->user();
+    
+    // Jika Admin: Hitung semua petani & semua produk desa
+  if ($user->role === 'admin') {
+            $totalFarmers = User::where('role', 'petani')->count();
+            $totalProducts = Product::count();
+        }
+    // Jika Petani: Hanya hitung produk milik dia sendiri
+   else {
+            $totalFarmers = 0; // Variabel harus tetap ada agar tidak error
+            $totalProducts = Product::where('user_id', $user->id)->count();
+        }
+
+    return view('dashboard', compact('totalFarmers', 'totalProducts'));
+    })->middleware(['auth', 'verified'])->name('dashboard');
 
     // --- A. PROFILE MANAGEMENT (Bawaan Breeze) ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
