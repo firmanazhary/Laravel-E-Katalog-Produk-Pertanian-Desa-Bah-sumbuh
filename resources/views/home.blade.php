@@ -62,44 +62,70 @@
         <div class="swiper-pagination"></div>
     </div>
 
-    <section id="katalog" class="py-24 px-6 bg-pattern">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <span class="text-orange-600 font-black uppercase tracking-[0.3em] text-xs">Marketplace Desa</span>
-                <h2 class="text-4xl font-black text-green-900 mt-2">🌟 Produk Terbaru Minggu Ini</h2>
-                <p class="text-slate-500 mt-4 italic">Temukan hasil panen dan ternak pilihan yang baru saja tersedia.</p>
-            </div>
+<section id="katalog" class="py-20 px-6 bg-white relative">
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-16 border-l-8 border-emerald-900 pl-8">
+            <span class="text-emerald-600 font-bold uppercase tracking-[0.3em] text-[10px] block mb-2">Dokumentasi Komoditas Desa</span>
+            <h2 class="text-4xl font-black text-emerald-950 uppercase tracking-tighter italic">Katalog Produk Unggulan</h2>
+            <p class="text-slate-400 mt-2 text-sm max-w-xl italic">Informasi ketersediaan stok produk pertanian dan peternakan Desa Bah Sumbu secara real-time.</p>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                @forelse($products as $product)
-                <div class="bg-white rounded-[2.5rem] p-4 shadow-sm border border-green-50 group hover:-translate-y-2 transition-all duration-500">
-                    <div class="relative h-64 rounded-[2rem] overflow-hidden mb-6">
-                        <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                        <div class="absolute top-4 left-4 bg-green-800 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase italic shadow-lg">Grade A</div>
-                    </div>
-                    <div class="px-4 pb-4">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Petani: {{ $product->user->name }}</span>
-                        </div>
-                        <h3 class="text-2xl font-black text-green-900 mb-4">{{ $product->name }}</h3>
-                        <div class="flex items-center justify-between border-t border-slate-50 pt-6 mt-auto">
-                            <div>
-                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Harga Pas</p>
-                                <span class="text-2xl font-black text-green-700">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                            </div>
-                            <a href="/product/{{ $product->slug }}" class="bg-green-900 hover:bg-orange-500 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition flex items-center gap-2 group">
-                                Amankan Stok
-                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            </a>
-                        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            @forelse($products as $product)
+            <div class="group bg-white rounded-[2rem] border border-slate-100 overflow-hidden hover:border-emerald-200 hover:shadow-2xl hover:shadow-emerald-900/5 transition-all duration-500">
+                
+                <div class="relative h-56 overflow-hidden bg-slate-50">
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    
+                    <div class="absolute top-4 right-4 flex flex-col gap-2 items-end">
+                        <span class="bg-emerald-900 text-white text-[8px] font-black px-3 py-1.5 rounded-lg uppercase tracking-widest shadow-lg">
+                            {{ $product->category }}
+                        </span>
+                        <span class="bg-orange-500 text-white text-[8px] font-black px-2 py-1 rounded-md uppercase italic shadow-md">
+                            {{ $product->quality ?? 'Grade A' }}
+                        </span>
                     </div>
                 </div>
-                @empty
-                <div class="col-span-3 text-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-slate-200 text-slate-400 italic">Belum ada produk hari ini...</div>
-                @endforelse
+
+                <div class="p-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">Mitra: {{ $product->user->name }}</span>
+                    </div>
+
+                    <h3 class="text-xl font-black text-emerald-950 uppercase tracking-tight mb-6 min-h-[3rem] line-clamp-2">
+                        {{ $product->name }}
+                    </h3>
+
+                    <div class="flex items-center justify-between pt-5 border-t border-slate-50">
+                        <div class="flex flex-col">
+                            <span class="text-[8px] font-bold text-slate-300 uppercase tracking-widest mb-1">Estimasi Harga</span>
+                            <div class="flex items-baseline gap-1 font-black text-emerald-900">
+                                <span class="text-xs italic">Rp</span>
+                                <span class="text-2xl tracking-tighter tabular-nums">
+                                    {{ number_format($product->price, 0, ',', '.') }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <a href="/product/{{ $product->slug }}" 
+                           class="bg-emerald-50 text-emerald-900 p-3 rounded-xl hover:bg-emerald-900 hover:text-white transition-all duration-300 group/btn">
+                            <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
+            @empty
+            <div class="col-span-full py-20 text-center border-2 border-dashed border-slate-100 rounded-[2rem]">
+                <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">Belum ada data tersedia</p>
+            </div>
+            @endforelse
         </div>
-    </section>
+    </div>
+</section>
 
     <section class="py-16 px-6">
         <div class="max-w-7xl mx-auto bg-orange-500 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl">

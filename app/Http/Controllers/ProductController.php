@@ -29,7 +29,9 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'image' => 'image|mimes:jpg,png,jpeg|max:2048',
+            'category' => 'required|in:Pertanian,Peternakan', 
+            'quality' => 'required',
+            'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
         ]);
 
         $path = $request->file('image') ? $request->file('image')->store('products', 'public') : null;
@@ -47,18 +49,17 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Produk Berhasil Disimpan!');
     }
-    // ... baris kode lainnya
 
-public function edit(Product $product)
-{
-    // Keamanan: Petani tidak boleh edit produk milik petani lain
-    if (auth()->user()->role !== 'admin' && $product->user_id !== auth()->id()) {
-        abort(403, 'Anda tidak memiliki akses ke produk ini.');
-    }
+    public function edit(Product $product)
+    {
+        // Keamanan: Petani tidak boleh edit produk milik petani lain
+        if (auth()->user()->role !== 'admin' && $product->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses ke produk ini.');
+        }
 
-    // Admin butuh daftar petani jika ingin memindahkan kepemilikan produk
-    $farmers = \App\Models\User::where('role', 'petani')->get();
-    
+        // Admin butuh daftar petani jika ingin memindahkan kepemilikan produk
+        $farmers = \App\Models\User::where('role', 'petani')->get();
+
     return view('dashboard.products.edit', compact('product', 'farmers'));
 }
 
