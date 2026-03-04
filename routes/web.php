@@ -1,46 +1,58 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\UserController;
-use App\Models\Product;
+
 use App\Http\Controllers\PublicController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-   $products = Product::with('user')->latest()->take(6)->get();
-
-    // Mengirim variabel $products ke view home
-    return view('home', compact('products'));
-})->name('home');
+/*
+|--------------------------------------------------------------------------
+| 1. GUEST / PUBLIC ROUTES
+|--------------------------------------------------------------------------
+| Rute yang bisa diakses oleh siapa saja tanpa perlu login.
+*/
+Route::get('/', [PublicController::class, 'index'])->name('home');
 Route::get('/about', [PublicController::class, 'about'])->name('about');
 Route::get('/products', [PublicController::class, 'allProducts'])->name('products.all');
 Route::get('/product/{slug}', [PublicController::class, 'show'])->name('product.detail');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+/*
+|--------------------------------------------------------------------------
+| 2. PROTECTED ROUTES (DASHBOARD AREA)
+|--------------------------------------------------------------------------
+| Semua rute di bawah ini wajib LOGIN dan VERIFIED.
+| URL akan diawali dengan /dashboard/...
+*/
+Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
+    
+    // Halaman Utama Dashboard
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    // --- A. PROFILE MANAGEMENT (Bawaan Breeze) ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // --- B. PRODUCT MANAGEMENT (Admin & Petani) ---
+    // Mencakup: index, create, store, show, edit, update, destroy
+    Route::resource('products', ProductController::class);
+
+    // --- C. FARMER MANAGEMENT (Khusus Admin) ---
+    Route::middleware('can:admin-only')->prefix('admin')->group(function() {
+        // Menggunakan resource agar otomatis punya fitur Edit & Delete Petani
+      Route::resource('farmers', \App\Http\Controllers\Admin\FarmerController::class)->names('admin.farmers');
+    });
+
 });
 
-Route::middleware(['auth'])->prefix('dashboard')->group(function () {
-  // 1. CRUD Produk (Bisa diakses Admin & Petani)
-    Route::resource('products', ProductController::class);
-    
-    // 2. Khusus Admin (Manajemen Akun Petani)
-    Route::middleware('can:admin-only')->group(function() {
-        // Menampilkan daftar petani
-        Route::get('/users', [UserController::class, 'index'])->name('users.index');
-        
-        // Menampilkan halaman form tambah petani (ini yang tadi kurang)
-        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-        
-        // Proses simpan data petani ke database
-        Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    });
-});
+/*
+|--------------------------------------------------------------------------
+| 3. AUTH ROUTES (Breeze Core)
+|--------------------------------------------------------------------------
+| Menghubungkan file auth.php (Login, Register, Reset Password, dll)
+*/
 require __DIR__.'/auth.php';
