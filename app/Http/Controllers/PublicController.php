@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Inertia\Inertia;
 class PublicController extends Controller
 {
     /**
@@ -13,13 +13,17 @@ class PublicController extends Controller
      */
     public function index()
     {
-        // Ambil 6 produk terbaru dengan data petaninya
-        $products = Product::with('user')->latest()->take(6)->get();
-        
-        // Ambil list petani untuk di-highlight di halaman depan
-        $farmers = User::where('role', 'petani')->withCount('products')->take(4)->get();
-        
-        return view('home', compact('products', 'farmers'));
+   // Ambil 6 produk terbaru dengan data petaninya
+    $products = Product::with('user')->latest()->take(6)->get();
+    
+    // Ambil list petani untuk di-highlight di halaman depan
+    $farmers = User::where('role', 'petani')->withCount('products')->take(4)->get();
+    
+    // Kirim data ke resources/js/Pages/Home.jsx
+    return Inertia::render('Home', [
+        'products' => $products,
+        'farmers'  => $farmers,
+    ]);
     }
 
     /**
@@ -27,38 +31,34 @@ class PublicController extends Controller
      */
     public function about()
     {
-        return view('about');
+        return Inertia::render('About');
     }
 
     /**
      * Menampilkan Katalog Lengkap dengan Fitur Filter
      */
+   // app/Http/Controllers/PublicController.php
     public function allProducts(Request $request)
     {
         $query = Product::with('user');
 
-        // Filter berdasarkan Petani (User ID)
-        if ($request->has('farmer') && $request->farmer != '') {
+        // Filter Logic (Sama seperti sebelumnya)
+        if ($request->filled('farmer')) {
             $query->where('user_id', $request->farmer);
         }
-
-        // Filter berdasarkan Kategori
-        if ($request->has('category') && $request->category != '') {
+        if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
-
-        // Filter berdasarkan Grade (Quality)
-        if ($request->has('quality') && $request->quality != '') {
+        if ($request->filled('quality')) {
             $query->where('quality', $request->quality);
         }
 
-        // Pagination 9 produk per halaman
-        $products = $query->latest()->paginate(9); 
-        
-        $farmers = User::where('role', 'petani')->get();
-        $categories = Product::select('category')->distinct()->pluck('category');
-
-        return view('all-products', compact('products', 'farmers', 'categories'));
+        return Inertia::render('Products/All', [
+            'products' => $query->latest()->paginate(9)->withQueryString(),
+            'farmers' => User::where('role', 'petani')->get(),
+            'categories' => Product::select('category')->distinct()->pluck('category'),
+            'filters' => $request->only(['farmer', 'category', 'quality']) // Kirim balik state filter
+        ]);
     }
 
     /**

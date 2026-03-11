@@ -6,7 +6,9 @@
         <title inertia>E-Katalog Bah Sumbu</title>
 
         @viteReactRefresh
-        @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
+        {{-- Cukup panggil app.jsx saja, jangan panggil folder Pages di sini --}}
+       
+        @vite(['resources/css/app.css', 'resources/js/app.jsx'])
         @inertiaHead
     </head>
     <body class="antialiased">
