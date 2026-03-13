@@ -1,6 +1,8 @@
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 import '../css/app.css';
+import { route } from 'ziggy-js';
+window.route = route;
 
 createInertiaApp({
   resolve: name => {

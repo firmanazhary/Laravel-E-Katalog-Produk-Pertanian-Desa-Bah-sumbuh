@@ -5,24 +5,34 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Support\Str; // Tambahkan ini untuk Slug
-use Illuminate\Support\Facades\Storage; // Tambahkan ini untuk hapus gambar
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia; 
 
 class ProductController extends Controller
 {
     public function index() {
-        if (auth()->user()->role === 'admin') {
+        $user = auth()->user();
+        
+        if ($user->role === 'admin') {
             $products = Product::with('user')->latest()->get();
         } else {
-            // Menggunakan relasi: pastikan di model User sudah ada public function products()
-            $products = auth()->user()->products()->latest()->get();
+            $products = $user->products()->with('user')->latest()->get();
         }
-        return view('dashboard.products.index', compact('products'));
+
+        return Inertia::render('Products/Index', [
+            'auth' => ['user' => $user], 
+            'products' => $products
+        ]);
     }
 
     public function create() {
         $farmers = User::where('role', 'petani')->get();
-        return view('dashboard.products.create', compact('farmers'));
+
+        return Inertia::render('Products/Create', [
+            'auth' => ['user' => auth()->user()], 
+            'farmers' => $farmers
+        ]);
     }
 
     public function store(Request $request) {
@@ -39,7 +49,7 @@ class ProductController extends Controller
         Product::create([
             'user_id' => (auth()->user()->role === 'admin') ? $request->user_id : auth()->id(),
             'name' => $request->name,
-            'slug' => Str::slug($request->name) . '-' . Str::random(5), // Slug otomatis & unik
+            'slug' => Str::slug($request->name) . '-' . Str::random(5),
             'category' => $request->category,
             'price' => $request->price,
             'quality' => $request->quality,
@@ -52,59 +62,55 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        // Keamanan: Petani tidak boleh edit produk milik petani lain
-        if (auth()->user()->role !== 'admin' && $product->user_id !== auth()->id()) {
+        $user = auth()->user();
+
+        if ($user->role !== 'admin' && $product->user_id !== $user->id) {
             abort(403, 'Anda tidak memiliki akses ke produk ini.');
         }
 
-        // Admin butuh daftar petani jika ingin memindahkan kepemilikan produk
-        $farmers = \App\Models\User::where('role', 'petani')->get();
+        $farmers = User::where('role', 'petani')->get();
 
-    return view('dashboard.products.edit', compact('product', 'farmers'));
-}
-
-public function update(Request $request, Product $product)
-{
-    $request->validate([
-        'name' => 'required|max:255',
-        'price' => 'required|numeric',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Nullable karena foto tidak wajib diganti
-    ]);
-
-    // Update data dasar
-    $product->name = $request->name;
-    $product->price = $request->price;
-    $product->quality = $request->quality;
-    $product->description = $request->description;
-
-    // Jika Admin yang edit, dia bisa ganti pemilik produk
-    if (auth()->user()->role === 'admin') {
-        $product->user_id = $request->user_id;
+        return Inertia::render('Products/Edit', [
+            'auth' => ['user' => $user], 
+            'product' => $product,
+            'farmers' => $farmers
+        ]);
     }
 
-    // Logika Ganti Gambar
-    if ($request->hasFile('image')) {
-        // Hapus foto lama agar tidak memenuhi storage
-        if ($product->image) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+    public function update(Request $request, Product $product)
+    {
+        $request->validate([
+            'name' => 'required|max:255',
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->quality = $request->quality;
+        $product->description = $request->description;
+
+        if (auth()->user()->role === 'admin') {
+            $product->user_id = $request->user_id;
         }
-        // Simpan foto baru
-        $product->image = $request->file('image')->store('products', 'public');
-    }
 
-    $product->save();
-
-    return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui!');
-}
-
-    public function destroy(Product $product) {
-        if (auth()->user()->role === 'admin' || auth()->id() === $product->user_id) {
-            
-            // Hapus file gambar dari storage biar gak jadi sampah
+        if ($request->hasFile('image')) {
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
+            $product->image = $request->file('image')->store('products', 'public');
+        }
 
+        $product->save();
+
+        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui!');
+    }
+
+    public function destroy(Product $product) {
+        if (auth()->user()->role === 'admin' || auth()->id() === $product->user_id) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
             $product->delete();
             return redirect()->route('products.index')->with('success', 'Produk Berhasil Dihapus!');
         }

@@ -15,4 +15,9 @@ export default defineConfig({
             '@': path.resolve(__dirname, 'resources/js'), // Alias untuk folder js
         },
     },
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
+    },
 });

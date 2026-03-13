@@ -17,7 +17,7 @@ export default function GuestLayout({ children }) {
                     <div className="hidden md:flex items-center gap-8 text-xs font-black uppercase tracking-widest text-green-900">
                         <Link href="/" className="hover:text-orange-600 transition">Beranda</Link>
                         <Link href="/about" className="hover:text-orange-600 transition">Cerita Kami</Link>
-                        <Link href="/products" className="hover:text-orange-600 transition flex items-center gap-2">
+                        <Link href="/products-all" className="hover:text-orange-600 transition flex items-center gap-2">
                             Katalog Lengkap
                             <span className="bg-orange-100 text-orange-600 text-[8px] px-2 py-0.5 rounded-full animate-pulse">NEW</span>
                         </Link>

@@ -24,6 +24,7 @@
         "@vitejs/plugin-react": "^5.1.4",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
-        "swiper": "^12.1.2"
+        "swiper": "^12.1.2",
+        "ziggy-js": "^2.6.2"
     }
 }

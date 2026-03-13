@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import GuestLayout from '@/Layouts/GuestLayouts'; // Pastikan path layout benar
+
 import { Head, Link, useForm } from '@inertiajs/react';
 import { EyeIcon, EyeSlashIcon, ArrowRightIcon, LockClosedIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 
 export default function Login({ status, canResetPassword }) {
     const [showPassword, setShowPassword] = useState(false);
 
-    // 1. Logika Form Inertia (Menggantikan input manual)
+    // 1. Logika Form Inertia
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
         remember: false,
     });
 
-    // 2. Cleanup password saat selesai
+    // 2. Cleanup password saat unmount
     useEffect(() => {
         return () => {
             reset('password');
@@ -22,11 +22,12 @@ export default function Login({ status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('login'));
+        // LANGSUNG TEMBAK URL MANUAL agar tidak stag di 'route is not defined'
+        post('/login'); 
     };
 
     return (
-        <GuestLayout>
+    <>
             <Head title="Log in" />
 
             <div className="min-h-[80vh] flex items-center justify-center px-4 relative font-sans">
@@ -74,7 +75,6 @@ export default function Login({ status, canResetPassword }) {
                                         type="email" 
                                         name="email"
                                         value={data.email}
-                                        autoComplete="username"
                                         onChange={(e) => setData('email', e.target.value)}
                                         className={`w-full bg-slate-100/40 border-2 rounded-[1.25rem] pl-14 pr-5 py-4 text-sm font-bold text-emerald-950 focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all outline-none placeholder:text-slate-400 placeholder:font-normal ${errors.email ? 'border-red-300' : 'border-transparent focus:border-emerald-500/10'}`}
                                         placeholder="nama@email.com"
@@ -97,7 +97,6 @@ export default function Login({ status, canResetPassword }) {
                                         type={showPassword ? "text" : "password"}
                                         name="password"
                                         value={data.password}
-                                        autoComplete="current-password"
                                         onChange={(e) => setData('password', e.target.value)}
                                         className={`w-full bg-slate-100/40 border-2 rounded-[1.25rem] pl-14 pr-14 py-4 text-sm font-bold text-emerald-950 focus:bg-white focus:ring-4 focus:ring-emerald-500/5 transition-all outline-none ${errors.password ? 'border-red-300' : 'border-transparent focus:border-emerald-500/10'}`}
                                         placeholder="••••••••"
@@ -128,7 +127,7 @@ export default function Login({ status, canResetPassword }) {
                                 </label>
                                 {canResetPassword && (
                                     <Link 
-                                        href={route('password.request')} 
+                                        href="/forgot-password" // URL MANUAL
                                         className="text-[10px] font-black text-emerald-600 hover:text-orange-600 uppercase tracking-widest transition-all"
                                     >
                                         Lupa?
@@ -163,6 +162,6 @@ export default function Login({ status, canResetPassword }) {
                     </div>
                 </div>
             </div>
-        </GuestLayout>
+     </>
     );
 }

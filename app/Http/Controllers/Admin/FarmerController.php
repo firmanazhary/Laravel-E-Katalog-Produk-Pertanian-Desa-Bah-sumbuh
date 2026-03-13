@@ -6,18 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia; // Wajib untuk render React
 
 class FarmerController extends Controller
 {
     public function index()
     {
         $farmers = User::where('role', 'petani')->latest()->get();
-        return view('admin.farmers.index', compact('farmers'));
+        
+        return Inertia::render('Admin/Farmers/Index', [
+            'auth' => ['user' => auth()->user()],
+            'farmers' => $farmers
+        ]);
     }
 
     public function create()
     {
-        return view('admin.farmers.create');
+        return Inertia::render('Admin/Farmers/Create', [
+            'auth' => ['user' => auth()->user()]
+        ]);
     }
 
     public function store(Request $request)
@@ -42,7 +49,10 @@ class FarmerController extends Controller
 
     public function edit(User $farmer)
     {
-        return view('admin.farmers.edit', compact('farmer'));
+        return Inertia::render('Admin/Farmers/Edit', [
+            'auth' => ['user' => auth()->user()],
+            'farmer' => $farmer
+        ]);
     }
 
     public function update(Request $request, User $farmer)
