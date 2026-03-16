@@ -43,7 +43,7 @@ Ikuti langkah-langkah berikut untuk menjalankan project di lokal:
 
 ```bash
 # 1. Clone Project
-git clone [https://github.com/firmanazhary/e-katalog-tani.git](https://github.com/firmanazhary/e-katalog-tani.git)
+git clone [https://github.com/firmanazhary/Laravel-E-Katalog-Produk-Pertanian-Desa-Bah-sumbuh.git](https://github.com/firmanazhary/Laravel-E-Katalog-Produk-Pertanian-Desa-Bah-sumbuh.git)
 cd e-katalog-tani
 
 # 2. Install Dependencies
