@@ -5,6 +5,16 @@ E-Katalog Bah Sumbu is a modern full-stack web application designed to showcase 
 
 ---
 
+## 🎯 Project Objectives
+
+The primary goals of developing this system are:
+* **Empowering Local Farmers:** To empower the farmers of Bah Sumbu Village by providing a dedicated digital platform to expand their market reach.
+* **Enhancing Bargaining Power:** To increase farmers' bargaining position through price transparency and clear quality standardization (Grade A & B).
+* **Digital Transformation:** To digitize village commodity data, moving from manual records to an organized, accessible, and modern digital system.
+* **Direct Market Connection:** To build trust between buyers and producers by facilitating direct communication and transactions via WhatsApp integration.
+
+---
+
 ## ✨ Key Features
 
 * **Premium Public Catalog:** High-end product display with Grade A/B quality indicators and botanical aesthetics.
