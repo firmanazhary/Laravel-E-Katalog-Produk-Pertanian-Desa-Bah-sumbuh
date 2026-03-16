@@ -60,5 +60,5 @@ php artisan storage:link
 
 # 5. Run Project
 npm run dev
-# Buka terminal baru
+# Open new Terminal
 php artisan serve
