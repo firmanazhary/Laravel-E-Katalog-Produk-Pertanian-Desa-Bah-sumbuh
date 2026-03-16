@@ -7,7 +7,6 @@ export default function Index({ auth, products, flash }) {
 
     const handleDelete = (id) => {
         if (confirm('Hapus produk ini dari katalog?')) {
-            // GANTI: Menggunakan URL manual agar tidak crash
             destroy(`/products/${id}`);
         }
     };
@@ -16,9 +15,10 @@ export default function Index({ auth, products, flash }) {
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div>
-                        <div className="flex items-center gap-2 mb-1">
+                /* Tambahkan px-4 agar header tidak mepet di mobile */
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 px-4 md:px-0">
+                    <div className="text-center md:text-left">
+                        <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
                             <span className="bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full">E-Katalog</span>
                             <span className="text-slate-300">•</span>
                             <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Desa Bah Sumbu</span>
@@ -28,9 +28,8 @@ export default function Index({ auth, products, flash }) {
                         </h2>
                     </div>
                     
-                    {/* GANTI: href manual */}
-                    <Link href="/products/create" className="group inline-flex items-center gap-3 bg-emerald-900 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-500 shadow-xl shadow-emerald-200">
-                        <svg className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg>
+                    <Link href="/products/create" className="group w-full md:w-auto inline-flex items-center justify-center gap-3 bg-emerald-900 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-500 shadow-xl shadow-emerald-200">
+                        <svg className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"/></svg>
                         Tambah Produk
                     </Link>
                 </div>
@@ -38,7 +37,8 @@ export default function Index({ auth, products, flash }) {
         >
             <Head title="Katalog Produk" />
 
-            <div className="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {/* Tambahkan px-6 di sini supaya card tidak mentok pinggir layar di mobile */}
+            <div className="py-12 max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
                 {flash?.success && (
                     <div className="mb-8 p-5 bg-emerald-600 text-white rounded-3xl font-bold text-sm shadow-lg">
                         {flash.success}
@@ -74,12 +74,11 @@ export default function Index({ auth, products, flash }) {
                                 </div>
 
                                 <div className="flex gap-2 pt-6 border-t border-emerald-50">
-                                    {/* GANTI: href manual untuk edit */}
                                     <Link href={`/products/${product.id}/edit`} className="flex-1 bg-emerald-50 text-emerald-700 text-center py-3 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-emerald-900 hover:text-white transition-all duration-300">
                                         Edit
                                     </Link>
                                     <button onClick={() => handleDelete(product.id)} className="p-3 bg-red-50 text-red-400 rounded-xl hover:bg-red-500 hover:text-white transition-all">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                     </button>
                                 </div>
                             </div>
