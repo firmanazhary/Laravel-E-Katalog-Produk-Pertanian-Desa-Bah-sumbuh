@@ -8,12 +8,12 @@ E-Katalog Bah Sumbu is a modern full-stack web application designed to showcase 
 ## ✨ Key Features
 
 * **Premium Public Catalog:** High-end product display with Grade A/B quality indicators and botanical aesthetics.
-* **Direct WhatsApp Integration:** Facilitates direct transactions between buyers and farmers with pre-filled messages.
+* **Direct WhatsApp Integration:** Facilitates direct transactions between buyers and farmers.
 * **Role-Based Dashboard:**
-    * **Admin:** Manage all farmers, verify accounts, and monitor the entire village ecosystem.
-    * **Farmers:** Personal profile-centric dashboard to manage their own commodities (CRUD).
-* **Modern UI/UX:** Responsive design using **Emerald & Orange** aesthetics, optimized for mobile users with a clean white interface.
-* **Performance:** Lightning-fast page transitions using **Inertia.js** (No-reload SPA experience).
+    * **Admin:** Full control over farmers' data and village commodities.
+    * **Farmers:** Profile-centric dashboard to manage personal products (CRUD).
+* **Modern UI/UX:** Responsive Emerald-Orange theme, optimized for mobile with a clean white interface.
+* **Seamless Navigation:** No-reload SPA experience powered by Inertia.js.
 
 ---
 
@@ -21,15 +21,34 @@ E-Katalog Bah Sumbu is a modern full-stack web application designed to showcase 
 
 * **Framework:** Laravel 11
 * **Frontend:** React.js + Inertia.js
-* **Styling:** Tailwind CSS (Mobile First Design)
-* **Icons:** Heroicons & Lucide React
+* **Styling:** Tailwind CSS
+* **Icons:** Heroicons
 * **Build Tool:** Vite
 
 ---
 
 ## 🚀 Installation Guide
 
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/firmanazhary/e-katalog-tani.git](https://github.com/firmanazhary/e-katalog-tani.git)
-   cd e-katalog-tani
+Ikuti langkah-langkah berikut untuk menjalankan project di lokal:
+
+```bash
+# 1. Clone Project
+git clone [https://github.com/firmanazhary/e-katalog-tani.git](https://github.com/firmanazhary/e-katalog-tani.git)
+cd e-katalog-tani
+
+# 2. Install Dependencies
+composer install
+npm install
+
+# 3. Environment Setup
+cp .env.example .env
+php artisan key:generate
+
+# 4. Database & Storage
+php artisan migrate --seed
+php artisan storage:link
+
+# 5. Run Project
+npm run dev
+# Buka terminal baru
+php artisan serve
